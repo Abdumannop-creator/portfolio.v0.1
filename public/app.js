@@ -144,3 +144,57 @@ tiltCards.forEach(card => {
         card.style.transform = 'perspective(1000px) rotateX(0) rotateY(0) scale(1) translateY(0)';
     });
 });
+
+const contactForm = document.querySelector('.contact-form');
+const submitBtn = document.querySelector('.submit-btn');
+
+const BOT_TOKEN = '8294558578:AAFmR_N2eehhm9T1FC57A8WEZPmk9OQGsag';
+const CHAT_ID = '-5089584594';
+
+contactForm.addEventListener('submit', (e) => {
+    e.preventDefault();
+
+    const name = document.getElementById('name').value;
+    const email = document.getElementById('email').value;
+    const message = document.getElementById('message').value;
+
+    if (!BOT_TOKEN || BOT_TOKEN === 'YOUR_BOT_TOKEN_HERE' || !CHAT_ID || CHAT_ID === 'YOUR_CHAT_ID_HERE') {
+        alert('Please configure your Telegram Bot Token and Chat ID in app.js!');
+        return;
+    }
+
+    const originalBtnText = submitBtn.innerHTML;
+    submitBtn.innerHTML = 'Sending... <i class="fas fa-spinner fa-spin"></i>';
+    submitBtn.disabled = true;
+
+    const text = `New Portfolio Contact! 🚀\n\n👤 Name: ${name}\n📧 Email: ${email}\n📝 Message: ${message}`;
+
+    fetch(`https://api.telegram.org/bot${BOT_TOKEN}/sendMessage`, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+            chat_id: CHAT_ID,
+            text: text
+        })
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.ok) {
+            alert('Message sent successfully! I will get back to you soon.');
+            contactForm.reset();
+        } else {
+            console.error('Telegram Error:', data);
+            alert('Oops! Something went wrong. Please try again later.');
+        }
+    })
+    .catch(error => {
+        console.error('Fetch Error:', error);
+        alert('Failed to send message. Check console for details.');
+    })
+    .finally(() => {
+        submitBtn.innerHTML = originalBtnText;
+        submitBtn.disabled = false;
+    });
+});
