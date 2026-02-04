@@ -4,6 +4,15 @@ worker_processes auto;
 events { worker_connections 1024; }
 
 http {
+  types {
+    text/css css;
+    application/javascript js;
+    text/javascript js;
+    image/svg+xml svg;
+    image/png png;
+    image/jpeg jpg jpeg;
+    image/x-icon ico;
+  }
   default_type application/octet-stream;
 
   server {
