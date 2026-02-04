@@ -179,22 +179,27 @@ contactForm.addEventListener('submit', (e) => {
             text: text
         })
     })
-    .then(response => response.json())
-    .then(data => {
-        if (data.ok) {
-            alert('Message sent successfully! I will get back to you soon.');
-            contactForm.reset();
-        } else {
-            console.error('Telegram Error:', data);
-            alert('Oops! Something went wrong. Please try again later.');
-        }
-    })
-    .catch(error => {
-        console.error('Fetch Error:', error);
-        alert('Failed to send message. Check console for details.');
-    })
-    .finally(() => {
-        submitBtn.innerHTML = originalBtnText;
-        submitBtn.disabled = false;
-    });
+        .then(response => response.json())
+        .then(data => {
+            if (data.ok) {
+                submitBtn.innerHTML = 'Sent! <i class="fas fa-check"></i>';
+                submitBtn.style.backgroundColor = '#00f2ea';
+                submitBtn.style.color = '#000';
+                contactForm.reset();
+                setTimeout(() => {
+                    window.location.reload();
+                }, 2000);
+            } else {
+                console.error('Telegram Error:', data);
+                alert('Oops! Something went wrong. Please try again later.');
+                submitBtn.innerHTML = originalBtnText;
+                submitBtn.disabled = false;
+            }
+        })
+        .catch(error => {
+            console.error('Fetch Error:', error);
+            alert('Failed to send message. Check console for details.');
+            submitBtn.innerHTML = originalBtnText;
+            submitBtn.disabled = false;
+        });
 });
